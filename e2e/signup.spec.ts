@@ -1,30 +1,40 @@
 import { test, expect } from '@playwright/test'
 
-import { getSignUpPage } from '../support/pages/SignUpPage'
+import { getSignUpPage } from '../support/pages/SignupPage'
 import { getDashPage } from '../support/pages/DashPage'
+import { getToast } from '../support/pages/components/Toast'
 
-import { NewUser, NewUsers } from '../support/fixtures/NewUser'
+import { getNewUser, User } from '../support/fixtures/User'
 
 test('deve realizar o cadastro com sucesso', async ({ page }) => {
 
     const signUpPage = getSignUpPage(page)
     const dashPage = getDashPage(page)
+    const toast = getToast(page)
 
-    const newUser: NewUser = NewUsers.firstUser
+    const user: User = getNewUser()
 
     await signUpPage.open()
+    await signUpPage.fill(user)
+    await signUpPage.submit()
 
-    await signUpPage.submit(newUser)
-
-    await expect(dashPage.welcome()).toContainText(`Olá, ${newUser.name}!`)
+    await expect(dashPage.welcome()).toContainText(`Olá, ${user.name}!`)
+    await expect(toast.element()).toContainText('Conta criada com sucesso!')
 
 })
 
-// test('deve exibir erro ao tentar cadastrar com campos obrigatórios em branco', async ({ page }) => {
+test('deve exibir erro ao tentar cadastrar com campos obrigatórios em branco', async ({ page }) => {
+    
+    const signUpPage = getSignUpPage(page)
+    const toast = getToast(page)
 
+    await signUpPage.open()
+    await signUpPage.submit()
 
+    await expect(toast.element())
+        .toContainText('Por favor, preencha todos os campos.')
 
-// })
+})
 
 // test('deve validar o formato inválido de email', async ({ page }) => {
 
