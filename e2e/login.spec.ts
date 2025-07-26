@@ -4,7 +4,7 @@ import { getLoginPage } from '../support/pages/LoginPage'
 import { getDashPage } from '../support/pages/DashPage'
 import { getToast } from '../support/pages/components/Toast'
 
-import { User, Users } from '../support/fixtures/User'
+import { UserLogin, Users } from '../support/fixtures/User'
 
 test('deve logar com sucesso', async ({ page }) => {
 
@@ -12,7 +12,7 @@ test('deve logar com sucesso', async ({ page }) => {
     const dashPage = getDashPage(page)
     const toast = getToast(page)
 
-    const user: User = Users.validUser
+    const user: UserLogin = Users.validUser
 
     await loginPage.open()
 
@@ -28,7 +28,7 @@ test('nao deve logar com senha incorreta', async ({ page }) => {
     const loginPage = getLoginPage(page)
     const toast = getToast(page)
 
-    const user: User = Users.invalidPassword
+    const user: UserLogin = Users.invalidPassword
 
     await loginPage.open()
 
@@ -44,7 +44,7 @@ test('nao deve logar com usuario não cadastrado', async ({ page }) => {
     const loginPage = getLoginPage(page)
     const toast = getToast(page)
 
-    const user: User = Users.nonExistentUser
+    const user: UserLogin = Users.nonExistentUser
 
     await loginPage.open()
 
@@ -60,7 +60,7 @@ test('nao deve logar quando não informo nenhum dos campos', async ({ page }) =>
     const loginPage = getLoginPage(page)
     const toast = getToast(page)
 
-    const user: User = Users.emptyFields
+    const user: UserLogin = Users.emptyFields
 
     await loginPage.open()
 
@@ -76,7 +76,7 @@ test('nao deve logar quando não informo o usuário', async ({ page }) => {
     const loginPage = getLoginPage(page)
     const toast = getToast(page)
 
-    const user: User = Users.emptyUsername
+    const user: UserLogin = Users.emptyUsername
 
     await loginPage.open()
 
@@ -92,7 +92,7 @@ test('nao deve logar quando não informo a senha', async ({ page }) => {
     const loginPage = getLoginPage(page)
     const toast = getToast(page)
 
-    const user: User = Users.emptyPassword
+    const user: UserLogin = Users.emptyPassword
 
     await loginPage.open()
 

@@ -4,7 +4,7 @@ import { getSignUpPage } from '../support/pages/SignupPage'
 import { getDashPage } from '../support/pages/DashPage'
 import { getToast } from '../support/pages/components/Toast'
 
-import { getNewUser, User } from '../support/fixtures/User'
+import { getNewUser, UserSignup } from '../support/fixtures/User'
 
 test('deve realizar o cadastro com sucesso', async ({ page }) => {
 
@@ -12,7 +12,7 @@ test('deve realizar o cadastro com sucesso', async ({ page }) => {
     const dashPage = getDashPage(page)
     const toast = getToast(page)
 
-    const user: User = getNewUser()
+    const user: UserSignup = getNewUser()
 
     await signUpPage.open()
     await signUpPage.fill(user)
@@ -24,7 +24,7 @@ test('deve realizar o cadastro com sucesso', async ({ page }) => {
 })
 
 test('deve exibir erro ao tentar cadastrar com campos obrigatórios em branco', async ({ page }) => {
-    
+
     const signUpPage = getSignUpPage(page)
     const toast = getToast(page)
 
@@ -36,14 +36,52 @@ test('deve exibir erro ao tentar cadastrar com campos obrigatórios em branco', 
 
 })
 
-// test('deve validar o formato inválido de email', async ({ page }) => {
+test('não deve cadastrar quando o email for incorreto', async ({ page }) => {
 
+    const signUpPage = getSignUpPage(page)
 
+    const user: UserSignup = getNewUser()
+    user.email = 'www.teste.com.br'
 
-// })
+    await signUpPage.open()
+    await signUpPage.fill(user)
+    await signUpPage.submit()
 
-// test('deve exibir erro quando a confirmação de senha for diferente da senha', async ({ page }) => {
+    const email = page.getByPlaceholder('Seu melhor e-mail para receber novidades!')
+    await expect(email).toHaveAttribute('type', 'email')
 
+})
 
+test('deve exibir erro ao tentar cadastrar com username incorreto', async ({ page }) => {
 
-// })
+    const signUpPage = getSignUpPage(page)
+    const toast = getToast(page)
+
+    const user: UserSignup = getNewUser()
+    user.username = 'beth@test'
+
+    await signUpPage.open()
+    await signUpPage.fill(user)
+    await signUpPage.submit()
+
+    await expect(toast.element())
+        .toContainText('Username inválido')
+
+})
+
+test('deve exibir erro quando a confirmação de senha for diferente da senha', async ({ page }) => {
+
+    const signUpPage = getSignUpPage(page)
+    const toast = getToast(page)
+
+    const user: UserSignup = getNewUser()
+    user.confirmPassword = 'test123'
+
+    await signUpPage.open()
+    await signUpPage.fill(user)
+    await signUpPage.submit()
+
+    await expect(toast.element())
+        .toContainText('Senhas não coincidem')
+
+})
