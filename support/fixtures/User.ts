@@ -11,7 +11,7 @@ export interface UserSignup {
 export interface UserLogin {
     name: string
     username: string
-    email: string
+    password: string
 }
 
 export function getFakerUser() {
@@ -35,6 +35,19 @@ export function getNewUser() {
         name: 'Beth Amancio',
         username: 'beth_amancio',
         email: 'bethamancio@email.com',
+        password: defaultPassword,
+        confirmPassword: defaultPassword
+    }
+}
+
+export function getDuplicateUser() {
+
+    const defaultPassword = 'pwd123'
+
+    return {
+        name: 'Bruno Santos',
+        username: 'bruno',
+        email: 'brunosantos@email.com',
         password: defaultPassword,
         confirmPassword: defaultPassword
     }

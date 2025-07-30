@@ -4,7 +4,9 @@ import { getSignUpPage } from '../support/pages/SignupPage'
 import { getDashPage } from '../support/pages/DashPage'
 import { getToast } from '../support/pages/components/Toast'
 
-import { getNewUser, UserSignup } from '../support/fixtures/User'
+import { removeUserByEmail, insertUser, removeUserByUsername } from '../support/database'
+
+import { getNewUser, UserSignup, getDuplicateUser } from '../support/fixtures/User'
 
 test('deve realizar o cadastro com sucesso', async ({ page }) => {
 
@@ -13,6 +15,7 @@ test('deve realizar o cadastro com sucesso', async ({ page }) => {
     const toast = getToast(page)
 
     const user: UserSignup = getNewUser()
+    await removeUserByEmail(user.email)
 
     await signUpPage.open()
     await signUpPage.fill(user)
@@ -20,6 +23,40 @@ test('deve realizar o cadastro com sucesso', async ({ page }) => {
 
     await expect(dashPage.welcome()).toContainText(`Olá, ${user.name}!`)
     await expect(toast.element()).toContainText('Conta criada com sucesso!')
+
+})
+
+test('não deve cadastrar quando o email já estiver em uso', async ({ page }) => {
+
+    const signUpPage = getSignUpPage(page)
+    const toast = getToast(page)
+
+    const user: UserSignup = getDuplicateUser()
+    await removeUserByEmail(user.email)
+    await insertUser(user)
+
+    await signUpPage.open()
+    await signUpPage.fill({...user, username: 'bruno123'})
+    await signUpPage.submit()
+
+    await expect(toast.element()).toContainText('Parece que esse e-mail ou nome de usuário já foi ca')
+
+})
+
+test('não deve cadastrar quando o username já estiver em uso', async ({ page }) => {
+
+    const signUpPage = getSignUpPage(page)
+    const toast = getToast(page)
+
+    const user: UserSignup = getDuplicateUser()
+    await removeUserByUsername(user.username)
+    await insertUser(user)
+
+    await signUpPage.open()
+    await signUpPage.fill({...user, email: 'bruno123@test.com.br'})
+    await signUpPage.submit()
+
+    await expect(toast.element()).toContainText('Parece que esse e-mail ou nome de usuário já foi ca')
 
 })
 
