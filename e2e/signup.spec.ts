@@ -6,7 +6,7 @@ import { getToast } from '../support/pages/components/Toast'
 
 import { removeUserByEmail, insertUser, removeUserByUsername } from '../support/database'
 
-import { getNewUser, UserSignup, getDuplicateUser } from '../support/fixtures/User'
+import { getNewUser, User, getDuplicateUser } from '../support/fixtures/User'
 
 test('deve realizar o cadastro com sucesso', async ({ page }) => {
 
@@ -14,7 +14,7 @@ test('deve realizar o cadastro com sucesso', async ({ page }) => {
     const dashPage = getDashPage(page)
     const toast = getToast(page)
 
-    const user: UserSignup = getNewUser()
+    const user: User = getNewUser()
     await removeUserByEmail(user.email)
 
     await signUpPage.open()
@@ -31,7 +31,7 @@ test('não deve cadastrar quando o email já estiver em uso', async ({ page }) =
     const signUpPage = getSignUpPage(page)
     const toast = getToast(page)
 
-    const user: UserSignup = getDuplicateUser()
+    const user: User = getDuplicateUser()
     await removeUserByEmail(user.email)
     await insertUser(user)
 
@@ -48,7 +48,7 @@ test('não deve cadastrar quando o username já estiver em uso', async ({ page }
     const signUpPage = getSignUpPage(page)
     const toast = getToast(page)
 
-    const user: UserSignup = getDuplicateUser()
+    const user: User = getDuplicateUser()
     await removeUserByUsername(user.username)
     await insertUser(user)
 
@@ -77,7 +77,7 @@ test('não deve cadastrar quando o email for incorreto', async ({ page }) => {
 
     const signUpPage = getSignUpPage(page)
 
-    const user: UserSignup = getNewUser()
+    const user: User = getNewUser()
     user.email = 'www.teste.com.br'
 
     await signUpPage.open()
@@ -93,7 +93,7 @@ test('deve exibir erro ao tentar cadastrar com username incorreto', async ({ pag
     const signUpPage = getSignUpPage(page)
     const toast = getToast(page)
 
-    const user: UserSignup = getNewUser()
+    const user: User = getNewUser()
     user.username = 'beth@test'
 
     await signUpPage.open()
@@ -110,7 +110,7 @@ test('deve exibir erro quando a confirmação de senha for diferente da senha', 
     const signUpPage = getSignUpPage(page)
     const toast = getToast(page)
 
-    const user: UserSignup = getNewUser()
+    const user: User = getNewUser()
     user.confirmPassword = 'test123'
 
     await signUpPage.open()

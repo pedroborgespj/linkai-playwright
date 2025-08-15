@@ -1,17 +1,11 @@
 import { faker } from '@faker-js/faker'
 
-export interface UserSignup {
+export interface User {
     name: string
     username: string
     email: string
     password: string
     confirmPassword: string
-}
-
-export interface UserLogin {
-    name: string
-    username: string
-    password: string
 }
 
 export function getFakerUser() {
@@ -53,36 +47,15 @@ export function getDuplicateUser() {
     }
 }
 
+export function getLoginUser() {
 
-export const Users = {
-    validUser: {
+    const defaultPassword = 'pwd123'
+
+    return {
         name: 'Beth',
         username: 'beth',
-        password: 'pwd123'
-    },
-    invalidPassword: {
-        name: 'Beth',
-        username: 'beth',
-        password: '123456'
-    },
-    nonExistentUser: {
-        name: 'Beth',
-        username: 'not-found',
-        password: 'pwd123'
-    },
-    emptyFields: {
-        name: 'Beth',
-        username: '',
-        password: ''
-    },
-    emptyUsername: {
-        name: 'Beth',
-        username: '',
-        password: 'pwd123'
-    },
-    emptyPassword: {
-        name: 'Beth',
-        username: 'beth',
-        password: ''
+        email: 'bethamanciodog@email.com',
+        password: defaultPassword,
+        confirmPassword: defaultPassword
     }
 }

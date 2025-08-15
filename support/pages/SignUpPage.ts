@@ -1,5 +1,5 @@
 import { expect, Page } from '@playwright/test'
-import { UserSignup } from '../fixtures/User'
+import { User } from '../fixtures/User'
 
 export function getSignUpPage(page: Page) {
 
@@ -12,7 +12,7 @@ export function getSignUpPage(page: Page) {
         open: async () => {
             await page.goto('http://localhost:3000/cadastro')
         },
-        fill: async (user: UserSignup) => {
+        fill: async (user: User) => {
             await page
                 .getByRole('textbox', { name: 'Como você gostaria de ser chamado?' })
                 .fill(user.name)
