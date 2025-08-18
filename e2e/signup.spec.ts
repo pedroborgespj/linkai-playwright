@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test'
 
-import { getSignUpPage } from '../support/pages/SignupPage'
-import { getDashPage } from '../support/pages/DashPage'
-import { getToast } from '../support/pages/components/Toast'
+import { getToast } from '../support/actions/components/Toast'
+import { getAuthActions } from '../support/actions/auth'
 
 import { removeUserByEmail, insertUser, removeUserByUsername } from '../support/database'
 
@@ -10,34 +9,33 @@ import { getNewUser, User, getDuplicateUser } from '../support/fixtures/User'
 
 test('deve realizar o cadastro com sucesso', async ({ page }) => {
 
-    const signUpPage = getSignUpPage(page)
-    const dashPage = getDashPage(page)
+    const auth = getAuthActions(page)
     const toast = getToast(page)
 
     const user: User = getNewUser()
     await removeUserByEmail(user.email)
 
-    await signUpPage.open()
-    await signUpPage.fill(user)
-    await signUpPage.submit()
+    await auth.navigateToSignup()
+    await auth.fillSignupForm(user)
+    await auth.submitSignupForm()
+    await auth.verifyUserLogin(user)
 
-    await expect(dashPage.welcome()).toContainText(`Olá, ${user.name}!`)
     await expect(toast.element()).toContainText('Conta criada com sucesso!')
 
 })
 
 test('não deve cadastrar quando o email já estiver em uso', async ({ page }) => {
 
-    const signUpPage = getSignUpPage(page)
+    const auth = getAuthActions(page)
     const toast = getToast(page)
 
     const user: User = getDuplicateUser()
     await removeUserByEmail(user.email)
     await insertUser(user)
 
-    await signUpPage.open()
-    await signUpPage.fill({...user, username: 'bruno123'})
-    await signUpPage.submit()
+    await auth.navigateToSignup()
+    await auth.fillSignupForm({...user, username: 'bruno123'})
+    await auth.submitSignupForm()
 
     await expect(toast.element()).toContainText('Parece que esse e-mail ou nome de usuário já foi ca')
 
@@ -45,16 +43,16 @@ test('não deve cadastrar quando o email já estiver em uso', async ({ page }) =
 
 test('não deve cadastrar quando o username já estiver em uso', async ({ page }) => {
 
-    const signUpPage = getSignUpPage(page)
+    const auth = getAuthActions(page)
     const toast = getToast(page)
 
     const user: User = getDuplicateUser()
     await removeUserByUsername(user.username)
     await insertUser(user)
 
-    await signUpPage.open()
-    await signUpPage.fill({...user, email: 'bruno123@test.com.br'})
-    await signUpPage.submit()
+    await auth.navigateToSignup()
+    await auth.fillSignupForm({...user, email: 'bruno123@test.com.br'})
+    await auth.submitSignupForm()
 
     await expect(toast.element()).toContainText('Parece que esse e-mail ou nome de usuário já foi ca')
 
@@ -62,11 +60,11 @@ test('não deve cadastrar quando o username já estiver em uso', async ({ page }
 
 test('deve exibir erro ao tentar cadastrar com campos obrigatórios em branco', async ({ page }) => {
 
-    const signUpPage = getSignUpPage(page)
+    const auth = getAuthActions(page)
     const toast = getToast(page)
 
-    await signUpPage.open()
-    await signUpPage.submit()
+    await auth.navigateToSignup()
+    await auth.submitSignupForm()
 
     await expect(toast.element())
         .toContainText('Por favor, preencha todos os campos.')
@@ -75,30 +73,30 @@ test('deve exibir erro ao tentar cadastrar com campos obrigatórios em branco', 
 
 test('não deve cadastrar quando o email for incorreto', async ({ page }) => {
 
-    const signUpPage = getSignUpPage(page)
+    const auth = getAuthActions(page)
 
     const user: User = getNewUser()
     user.email = 'www.teste.com.br'
 
-    await signUpPage.open()
-    await signUpPage.fill(user)
-    await signUpPage.submit()
+    await auth.navigateToSignup()
+    await auth.fillSignupForm(user)
+    await auth.submitSignupForm()
 
-    await signUpPage.validateEmailFieldType()
+    await auth.validateEmailFieldType()
 
 })
 
 test('deve exibir erro ao tentar cadastrar com username incorreto', async ({ page }) => {
 
-    const signUpPage = getSignUpPage(page)
+    const auth = getAuthActions(page)
     const toast = getToast(page)
 
     const user: User = getNewUser()
     user.username = 'beth@test'
 
-    await signUpPage.open()
-    await signUpPage.fill(user)
-    await signUpPage.submit()
+    await auth.navigateToSignup()
+    await auth.fillSignupForm(user)
+    await auth.submitSignupForm()
 
     await expect(toast.element())
         .toContainText('Username inválido')
@@ -107,15 +105,15 @@ test('deve exibir erro ao tentar cadastrar com username incorreto', async ({ pag
 
 test('deve exibir erro quando a confirmação de senha for diferente da senha', async ({ page }) => {
 
-    const signUpPage = getSignUpPage(page)
+    const auth = getAuthActions(page)
     const toast = getToast(page)
 
     const user: User = getNewUser()
     user.confirmPassword = 'test123'
 
-    await signUpPage.open()
-    await signUpPage.fill(user)
-    await signUpPage.submit()
+    await auth.navigateToSignup()
+    await auth.fillSignupForm(user)
+    await auth.submitSignupForm()
 
     await expect(toast.element())
         .toContainText('Senhas não coincidem')

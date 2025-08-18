@@ -1,18 +1,38 @@
 import { expect, Page } from '@playwright/test'
 import { User } from '../fixtures/User'
 
-export function getSignUpPage(page: Page) {
+export function getAuthActions(page: Page) {
 
-    const emailField = ()=> {
+    const emailField = () => {
         return page
             .getByRole('textbox', { name: 'Seu melhor e-mail para receber novidades!' })
     }
 
     return {
-        open: async () => {
+        navigateToLogin: async () => {
+            await page.goto('http://localhost:3000/login')
+        },
+        navigateToSignup: async () => {
             await page.goto('http://localhost:3000/cadastro')
         },
-        fill: async (user: User) => {
+        doLogin: async (user: User) => {
+            await page
+                .getByRole('textbox', { name: 'Seu @username incrível' })
+                .fill(user.username)
+
+            await page
+                .getByRole('textbox', { name: 'Digite sua senha secreta' })
+                .fill(user.password)
+
+            await page
+                .getByRole('button', { name: 'Entrar' })
+                .click()
+        },
+        verifyUserLogin: async (user: User) => {
+            const title = page.locator('h1')
+            await expect(title).toContainText(`Olá, ${user.name}!`)
+        },
+        fillSignupForm: async (user: User) => {
             await page
                 .getByRole('textbox', { name: 'Como você gostaria de ser chamado?' })
                 .fill(user.name)
@@ -31,7 +51,7 @@ export function getSignUpPage(page: Page) {
                 .getByRole('textbox', { name: 'Repita sua senha para garantir!' })
                 .fill(user.confirmPassword)
         },
-        submit: async () => {
+        submitSignupForm: async () => {
             await page
                 .getByRole('button', { name: 'Criar conta' })
                 .click()
@@ -39,6 +59,5 @@ export function getSignUpPage(page: Page) {
         validateEmailFieldType: async () => {
             await expect(emailField()).toHaveAttribute('type', 'email')
         }
-        
     }
 }
