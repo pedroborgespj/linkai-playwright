@@ -1,9 +1,15 @@
-import { Page } from '@playwright/test'
+import { Page, expect } from '@playwright/test'
 
 export function getToast(page: Page) {
     return {
-        element: () => {
-            return page.locator('.toast')
+        haveText: async (title: string, description: string) => {
+
+            const toast = page.locator('.toast')
+
+            await expect(toast).toContainText(title)
+            await expect(toast).toContainText(description)
+            
+            return 
         }
     }
 }

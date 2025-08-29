@@ -5,7 +5,13 @@ export interface User {
     username: string
     email: string
     password: string
-    confirmPassword: string
+    confirmPassword: string,
+    links?: Link[]
+}
+
+export interface Link {
+    title: string,
+    url: string
 }
 
 export function getFakerUser() {
@@ -57,5 +63,42 @@ export function getLoginUser() {
         email: 'bethamanciodog@email.com',
         password: defaultPassword,
         confirmPassword: defaultPassword
+    }
+}
+
+export function getuserWithLink() {
+
+    const defaultPassword = 'pwd123'
+
+    return {
+        name: 'Clodoaldo',
+        username: 'clods',
+        email: 'clodoaldo@email.com',
+        password: defaultPassword,
+        confirmPassword: defaultPassword,
+        links: [{
+            title: 'Meus Cursos',
+            url: 'https://clodoaldo.dev/cursos'
+        }]
+    }
+}
+
+export function getuserWithLinks() {
+
+    const defaultPassword = 'pwd123'
+
+    return {
+        name: 'Fernando',
+        username: 'nando',
+        email: 'fernando@email.com',
+        password: defaultPassword,
+        confirmPassword: defaultPassword,
+        links: [
+            { title: 'Meus Cursos', url: 'https://fernando.dev/cursos' },
+            { title: 'Meus Blog', url: 'https://fernando.dev/blog' },
+            { title: 'Fale Comigo', url: 'https://fernando.dev/contato' },
+            { title: 'Minhas Musicas', url: 'https://fernando.dev/playlist' },
+            { title: 'Sobre', url: 'https://fernando.dev/sobre' }
+        ]
     }
 }

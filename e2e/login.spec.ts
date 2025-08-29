@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 
 import { getToast } from '../support/actions/components/Toast'
 import { getAuthActions } from '../support/actions/auth'
@@ -20,7 +20,7 @@ test('deve logar com sucesso', async ({ page }) => {
     await auth.navigateToLogin()
     await auth.doLogin(user)
     await auth.verifyUserLogin(user)
-    await expect(toast.element()).toContainText('Login realizado com sucesso!')
+    await toast.haveText('Login realizado com sucesso!', 'Bem-vindo de volta ao Linkaí.')
 
 })
 
@@ -32,8 +32,7 @@ test('nao deve logar com senha incorreta', async ({ page }) => {
     await auth.navigateToLogin()
     await auth.doLogin({...user, password: '123456'})
 
-    await expect(toast.element())
-        .toContainText('Algo deu errado com seu login. Por favor, verifique suas credenciais e tente novamente.')
+    await toast.haveText('Oops!', 'Algo deu errado com seu login. Por favor, verifique suas credenciais e tente novamente.')
 
 })
 
@@ -46,8 +45,7 @@ test('nao deve logar com usuario não cadastrado', async ({ page }) => {
 
     await auth.doLogin({...user, username: 'not-found'})
 
-    await expect(toast.element())
-        .toContainText('Algo deu errado com seu login. Por favor, verifique suas credenciais e tente novamente.')
+    await toast.haveText('Oops!', 'Algo deu errado com seu login. Por favor, verifique suas credenciais e tente novamente.')
 
 })
 
@@ -60,8 +58,7 @@ test('nao deve logar quando não informo nenhum dos campos', async ({ page }) =>
 
     await auth.doLogin({...user, username: '', password: ''})
 
-    await expect(toast.element())
-        .toContainText('Por favor, preencha todos os campos.')
+    await toast.haveText('Campos obrigatórios', 'Por favor, preencha todos os campos.')
 
 })
 
@@ -74,8 +71,7 @@ test('nao deve logar quando não informo o usuário', async ({ page }) => {
 
     await auth.doLogin({...user, username: ''})
 
-    await expect(toast.element())
-        .toContainText('Por favor, preencha todos os campos.')
+    await toast.haveText('Campos obrigatórios', 'Por favor, preencha todos os campos.')
 
 })
 
@@ -88,7 +84,6 @@ test('nao deve logar quando não informo a senha', async ({ page }) => {
 
     await auth.doLogin({...user, password: ''})
 
-    await expect(toast.element())
-        .toContainText('Por favor, preencha todos os campos.')
+    await toast.haveText('Campos obrigatórios', 'Por favor, preencha todos os campos.')
 
 })
