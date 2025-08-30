@@ -102,3 +102,21 @@ export function getuserWithLinks() {
         ]
     }
 }
+
+export function getuserWithSocialMedia() {
+
+    const defaultPassword = 'pwd123'
+
+    return {
+        name: 'Jon Bon Jovi',
+        username: 'bonjovi',
+        email: 'jon@bonjovi.com',
+        password: defaultPassword,
+        confirmPassword: defaultPassword,
+        socialMedia: {
+            github: 'bonjovi',
+            linkedin: 'bonjovi',
+            instagram: 'bonjovi'
+        }
+    }
+}
