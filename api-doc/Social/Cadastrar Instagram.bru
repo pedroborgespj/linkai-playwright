@@ -1,0 +1,26 @@
+meta {
+  name: Cadastrar Instagram
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/socials
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "platform": "Instagram",
+    "username": "stevejobs"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Cadastrar novo link
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/links
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "name": "Meu Blog",
+    "url": "https://blog.jobs.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
