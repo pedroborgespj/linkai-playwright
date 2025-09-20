@@ -10,10 +10,10 @@ export function getAuthActions(page: Page) {
 
     return {
         navigateToLogin: async () => {
-            await page.goto('http://localhost:3000/login')
+            await page.goto('/login')
         },
         navigateToSignup: async () => {
-            await page.goto('http://localhost:3000/cadastro')
+            await page.goto('/cadastro')
         },
         doLogin: async (user: User) => {
             await page

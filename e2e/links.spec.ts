@@ -53,6 +53,7 @@ test('deve cadastrar multiplos links', async ({ page }) => {
             await link.openModal()
             await link.submitLinkForm(l)
             await toast.haveText('Sucesso!', 'Link adicionado com sucesso.')
+            await page.press('body', 'Escape')
         }
     }
     

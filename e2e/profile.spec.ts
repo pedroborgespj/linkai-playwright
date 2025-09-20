@@ -1,61 +1,51 @@
-import { test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 import { removeUserByEmail } from '../support/database'
 
 import { createFullProfile } from '../support/services'
 
+import profile from '../support/fixtures/profile.json'
 
-test('Deve exibir os meus links no meu perfil', async ({ page, request }) => {
+test.describe.serial('Perfil do usuário', () => {
 
-    const profile = {
-        user: {
-            name: 'Steve Jobs',
-            email: 'jobs@apple.com',
-            username: 'stevejobs',
-            bio: '',
-            password: 'pwd123'
-        },
-        links: [
-            {
-                name: 'Meu Blog',
-                url: 'https://blog.jobs.com'
-            },
-            {
-                name: 'Portfólio',
-                url: 'https://portfolio.jobs.com'
-            },
-            {
-                name: 'Apple',
-                url: 'https://www.apple.com'
-            },
-            {
-                name: 'Biografia',
-                url: 'https://biografia.jobs.com'
-            },
-            {
-                name: 'Medium',
-                url: 'https://medium.com/stevejobs'
-            }
-        ],
-        socials: {
-            github: {
-                platform: 'GitHub',
-                username: 'stevejobsdev'
-            },
-            linkedin: {
-                platform: 'LinkedIn',
-                username: 'stevejobs'
-            },
-            instagram: {
-                platform: 'Instagram',
-                username: 'stevejobs'
-            }
+    test.beforeAll(async ({ request }) => {
+
+        await removeUserByEmail(profile.user.email)
+        await createFullProfile(request, profile)
+    })
+
+    test('Deve exibir os meus links no meu perfil', async ({ page, request }) => {
+
+        await page.goto(`/${profile.user.username}`)
+
+        await expect(page.getByRole('heading', { name: profile.user.name })).toBeVisible()
+
+        for (const link of profile.links) {
+            const item = page.locator(`a[href="${link.url}"]`)
+            await expect(item).toBeVisible()
+            await expect(item).toContainText(link.name)
         }
-    }
 
+    })
 
-    await removeUserByEmail(profile.user.email)
+    test('Deve exibir as redes sociais do meu perfil', async ({ page, request }) => {
 
-    await createFullProfile(request, profile)
+        await page.goto(`/${profile.user.username}`)
+
+        await expect(page.getByRole('heading', { name: profile.user.name })).toBeVisible()
+
+        const socialUrls = [
+            `https://github.com/${profile.socials.github.username}`,
+            `https://instagram.com/${profile.socials.instagram.username}`,
+            `https://linkedin.com/in/${profile.socials.linkedin.username}`
+        ]
+
+        for (const url of socialUrls) {
+            const item = page.locator(`a[href="${url}"]`)
+            await expect(item).toBeVisible()
+        }
+
+    })
 
 })
+
