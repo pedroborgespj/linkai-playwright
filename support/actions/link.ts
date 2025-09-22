@@ -21,7 +21,9 @@ export function getLinkActions(page: Page) {
                 .getByRole('textbox', { name: 'URL' })
                 .fill(link.url)
 
-            await page.getByRole('button', { name: 'Adicionar Link' }).click()
+            await page
+                .getByRole('button', { name: 'Adicionar Link' })
+                .click({force: true})
         }
     }
 }

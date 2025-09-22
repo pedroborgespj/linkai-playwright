@@ -9,7 +9,6 @@ export function getToast(page: Page) {
             await expect(toast).toContainText(title)
             await expect(toast).toContainText(description)
             
-            return 
         }
     }
 }

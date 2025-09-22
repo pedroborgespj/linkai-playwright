@@ -53,6 +53,19 @@ export function getDuplicateUser() {
     }
 }
 
+export function getDuplicateEmail() {
+
+    const defaultPassword = 'pwd123'
+
+    return {
+        name: 'Augusto Smith',
+        username: 'augustosmith',
+        email: 'smith@augusto.dev',
+        password: defaultPassword,
+        confirmPassword: defaultPassword
+    }
+}
+
 export function getLoginUser() {
 
     const defaultPassword = 'pwd123'
